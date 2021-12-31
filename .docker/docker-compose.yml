@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: nextjs_postgres
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-password}
+      - POSTGRES_DB=${DB_NAME:-nextjs}
+      - POSTGRES_PORT=${DB_PORT:-5432}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - nextjs_network
+volumes:
+  postgres-data:
+networks:
+  nextjs_network:
+    driver: bridge
