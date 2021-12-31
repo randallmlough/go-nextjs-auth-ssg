@@ -16,9 +16,6 @@ const (
 	ScopePasswordReset  = "password-reset"
 )
 
-// Define a Token struct to hold the data for an individual token. This includes the
-// plaintext and hashed versions of the token, associated user ID, expiry time and
-// scope.
 type Token struct {
 	Plaintext string    `json:"token"`
 	Hash      []byte    `json:"-"`
@@ -27,8 +24,7 @@ type Token struct {
 	Scope     string    `json:"-"`
 }
 
-// The New() method is a shortcut which creates a new Token struct and then inserts the
-// data in the tokens table.
+// New creates a new Token struct and then inserts the data in the tokens table.
 func New(db db.Executor, userID int64, ttl time.Duration, scope string) (*Token, error) {
 	token, err := GenerateToken(userID, ttl, scope)
 	if err != nil {
@@ -39,7 +35,7 @@ func New(db db.Executor, userID int64, ttl time.Duration, scope string) (*Token,
 	return token, err
 }
 
-// GenerateToken takes a userID, expiry time, and scope
+// GenerateToken generates a token
 func GenerateToken(userID int64, ttl time.Duration, scope string) (*Token, error) {
 	// Create a Token instance containing the user ID, expiry, and scope information.
 	// Notice that we add the provided ttl (time-to-live) duration parameter to the
@@ -82,6 +78,7 @@ func GenerateToken(userID int64, ttl time.Duration, scope string) (*Token, error
 	return token, nil
 }
 
+// RevokeToken removes a token from the tokens table
 func RevokeToken(db db.Executor, token Token) error {
 	return delete(db, token.Plaintext, token.UserID)
 }

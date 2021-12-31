@@ -32,7 +32,7 @@ type Metadata struct {
 	TotalRecords int `json:"total_records,omitempty"`
 }
 
-// Check that the frontend-provided Sort field matches one of the entries in our safelist
+// SortColumn checks that the frontend-provided Sort field matches one of the entries in our safelist
 // and if it does, extract the column name from the Sort field by stripping the leading
 // hyphen character (if one exists).
 //
@@ -48,7 +48,7 @@ func (f Filters) SortColumn() string {
 	panic("unsafe sort parameter: " + f.Sort)
 }
 
-// Return the sort direction ("ASC" or "DESC") depending on the prefix character of the
+// SortDirection returns the sort direction ("ASC" or "DESC") depending on the prefix character of the
 // Sort field.
 func (f Filters) SortDirection() string {
 	if strings.HasPrefix(f.Sort, "-") {
@@ -58,11 +58,14 @@ func (f Filters) SortDirection() string {
 	return "ASC"
 }
 
+// Limit returns the count of the PageSize field
 func (f Filters) Limit() int {
 	return f.PageSize
 }
 
-// There is the theoretical risk of an integer overflow as we are multiplying two int values together.
+// Offset returns the count of what the page offset should be.
+//
+// Note: There is the theoretical risk of an integer overflow as we are multiplying two int values together.
 // However, this is mitigated by the validation rules we created in our ValidateFilters() function,
 // where we enforced maximum values of page_size=100 and page=10000000 (10 million).
 // This means that the value returned by Offset() should never come close to overflowing
@@ -70,7 +73,7 @@ func (f Filters) Offset() int {
 	return (f.Page - 1) * f.PageSize
 }
 
-// The CalculateMetadata() function calculates the appropriate pagination metadata
+// CalculateMetadata calculates the appropriate pagination metadata
 // values given the total number of records, current page, and page size values. Note
 // that the last page value is calculated using the math.Ceil() function, which rounds
 // up a float to the nearest integer. So, for example, if there were 12 records in total

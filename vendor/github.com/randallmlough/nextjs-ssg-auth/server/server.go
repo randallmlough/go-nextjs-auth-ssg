@@ -22,7 +22,6 @@ type Config struct {
 
 func Serve(config Config, handler http.Handler) error {
 	// Declare an HTTP server using the same settings as in our main() function.
-
 	srv := &http.Server{
 		Addr:         fmt.Sprintf(":%d", config.Port),
 		Handler:      handler,
@@ -88,13 +87,13 @@ func Serve(config Config, handler http.Handler) error {
 
 	// Otherwise, we wait to receive the return value from Shutdown() on the
 	// shutdownError channel. If return value is an error, we know that there was a
-	// problem with the graceful shutdown and we return the error.
+	// problem with the graceful shutdown, and we return the error.
 	err = <-shutdownError
 	if err != nil {
 		return err
 	}
 
-	// At this point we know that the graceful shutdown completed successfully and we
+	// At this point we know that the graceful shutdown completed successfully, and we
 	// log a "stopped server" message.
 	log.Println("stopped server", map[string]interface{}{
 		"addr": srv.Addr,

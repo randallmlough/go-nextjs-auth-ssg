@@ -35,8 +35,6 @@ func MethodNotAllowedResponse(w http.ResponseWriter, r *http.Request) {
 	ErrorResponse(w, r, http.StatusMethodNotAllowed, message)
 }
 
-// Note that the errors parameter here has the type map[string]string, which is exactly
-// the same as the errors map contained in our Validator type.
 func FailedValidationResponse(w http.ResponseWriter, r *http.Request, errors map[string]string) {
 	ErrorResponse(w, r, http.StatusUnprocessableEntity, errors)
 }

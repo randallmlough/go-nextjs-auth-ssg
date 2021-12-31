@@ -20,9 +20,10 @@ func Write(w http.ResponseWriter, status int, data Envelope, headers http.Header
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	w.Write(js)
+	if _, err := w.Write(js); err != nil {
+		return err
+	}
 	return nil
-
 }
 
 func marshall(data Envelope) ([]byte, error) {

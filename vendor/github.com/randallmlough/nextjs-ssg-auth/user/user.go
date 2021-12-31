@@ -27,7 +27,7 @@ type Service struct {
 	db *db.DB
 }
 
-// New returns a movie Service interface.
+// New returns a User Service interface.
 func New(db *db.DB) Service {
 	return Service{db: db}
 }

@@ -5,8 +5,6 @@ import (
 	"time"
 
 	"github.com/randallmlough/nextjs-ssg-auth/db"
-
-	"github.com/lib/pq"
 )
 
 // getAllForUser method returns all permission codes for a specific user in a
@@ -56,6 +54,6 @@ func addForUser(db db.Executor, userID int64, codes ...Permission) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	_, err := db.Exec(ctx, query, userID, pq.Array(codes))
+	_, err := db.Exec(ctx, query, userID, codes)
 	return err
 }

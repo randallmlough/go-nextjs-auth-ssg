@@ -22,7 +22,7 @@ func insert(db db.Executor, token *Token) error {
 	return err
 }
 
-// insert adds the data for a specific token to the tokens table.
+// delete removes a token for a specific user from the tokens table.
 func delete(db db.Executor, tokenHash string, userID int64) error {
 	query := `
         DELETE FROM tokens WHERE hash = $1 AND user_id = $2`

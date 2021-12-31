@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/randallmlough/nextjs-ssg-auth/config"
 	"github.com/randallmlough/nextjs-ssg-auth/db"
+	"github.com/randallmlough/nextjs-ssg-auth/permission"
 	"github.com/randallmlough/nextjs-ssg-auth/user"
 )
 
@@ -18,7 +19,8 @@ type API struct {
 }
 
 type Services struct {
-	Users user.Service
+	Users       user.Service
+	Permissions permission.Service
 }
 
 func New(cfg config.Config, db *db.DB) *API {
@@ -31,7 +33,9 @@ func New(cfg config.Config, db *db.DB) *API {
 
 func RegisterServices(db *db.DB) Services {
 	userService := user.New(db)
+	permissionService := permission.New(db)
 	return Services{
-		Users: userService,
+		Users:       userService,
+		Permissions: permissionService,
 	}
 }

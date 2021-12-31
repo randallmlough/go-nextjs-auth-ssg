@@ -7,12 +7,20 @@ import (
 )
 
 func (api *API) AuthenticationCheck(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	u := user.FromContext(r)
 
-	env := json.Envelope{"user": u}
-
-	err := json.Write(w, http.StatusOK, env, nil)
+	permission, err := api.services.Permissions.GetAllForUser(ctx, api.db, u.ID)
 	if err != nil {
+		json.ServerErrorResponse(w, r, err)
+	}
+
+	env := json.Envelope{
+		"user": u,
+		"role": permission,
+	}
+
+	if err := json.Write(w, http.StatusOK, env, nil); err != nil {
 		json.ServerErrorResponse(w, r, err)
 	}
 }

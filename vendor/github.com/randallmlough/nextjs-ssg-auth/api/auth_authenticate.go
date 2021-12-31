@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"github.com/jackc/pgx/v4"
 	"github.com/randallmlough/nextjs-ssg-auth/db"
 	"net/http"
@@ -44,7 +43,6 @@ func (api *API) AuthenticationHandler(w http.ResponseWriter, r *http.Request) {
 	err := api.db.InTx(ctx, pgx.ReadCommitted, func(tx pgx.Tx) error {
 		u, err := api.services.Users.GetByEmailInTx(ctx, tx, input.Email)
 		if err != nil {
-			fmt.Println("error", err)
 			switch {
 			case errors.Is(err, db.ErrRecordNotFound):
 				return ErrInvalidCredentials

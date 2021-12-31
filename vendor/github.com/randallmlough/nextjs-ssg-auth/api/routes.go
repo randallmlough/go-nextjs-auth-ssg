@@ -7,15 +7,7 @@ import (
 	"github.com/randallmlough/nextjs-ssg-auth/json"
 	"github.com/randallmlough/nextjs-ssg-auth/middleware"
 	"net/http"
-	"path"
 )
-
-const (
-	apiRoute   = "/api"
-	apiVersion = "/v1"
-)
-
-var apiPath = path.Join(apiRoute, apiVersion)
 
 func (api API) RegisterRoutes() http.Handler {
 	r := chi.NewRouter()
@@ -28,9 +20,11 @@ func (api API) RegisterRoutes() http.Handler {
 
 	// resource RegisterRoutes
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"message": "available"}`))
+		if err := json.Write(w, http.StatusOK, json.Envelope{
+			"message": "available",
+		}, nil); err != nil {
+			json.ServerErrorResponse(w, r, err)
+		}
 	})
 	r.Mount("/auth", api.authRoutes())
 	return r
@@ -49,7 +43,7 @@ func (api API) Middleware(r http.Handler) http.Handler {
 	}
 	mw := middleware.New(cfg, api.db, api.services.Users)
 	return middleware.RecoverPanic(
-		mw.EnableCORS(
+		middleware.SecureHeaders(
 			auth.AuthCookie(
 				mw.AuthenticateAndRequire(r),
 			),
