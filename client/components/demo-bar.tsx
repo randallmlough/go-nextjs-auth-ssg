@@ -10,7 +10,10 @@ export default function DemoBar() {
               This is a demo project. Don't give sensitive data to this app.
             </span>
             <span className="ml-2 inline-block">
-              <a href="#" className="text-white font-bold underline">
+              <a
+                href="https://github.com/randallmlough/go-nextjs-auth-ssg"
+                className="text-white font-bold underline"
+              >
                 {" "}
                 View repository <span aria-hidden="true">&rarr;</span>
               </a>
